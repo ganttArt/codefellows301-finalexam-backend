@@ -21,14 +21,15 @@ Data.addAnItem = async (req, res, next) => {
 }
 
 Data.getAllItems = async (req, res) => {
-  const items = await DataModel.find();
+  const items = await DataModel.find(); //tried findOne, removing and not removing {} inside find and returning items[0]
   res.status(200).json(items);
 }
 
 Data.getOneItem = async(req, res) => {
   const id = req.params.id;
   console.log('getoneitem', id);
-  const items = await DataModel.find({ _id:id });
+  //id is coming in from params but the 
+  const items = await DataModel.find({ _id:id }); //tried removing _id, using findOne and returning items[0]
   console.log(items);
   res.status(200).json(items);
 }
