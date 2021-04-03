@@ -6,14 +6,7 @@ const Data = { };
 
 Data.addAnItem = async(req, res, next) => {
   try {
-    const data = req.body;
-    // console.log('next', next);
-    // console.log('request object', req.body, req.data, req.query, req.params);
-    // none of the data coming in from the request at all. Don't know where to find it.
-    // console.log('add an item data', data);
-
-
-    // hardcoded data
+    // // hardcoded test data
     // const newdata = {
     //   name: 'Chris',
     //   description: 'software engineer'
@@ -21,29 +14,22 @@ Data.addAnItem = async(req, res, next) => {
     // const newItem = new DataModel(newdata);
     // console.log('newdata, newitem', newdata, newItem);
 
+    const data = req.body;
     const item = new DataModel(data);
-    // await item.save();
-    console.log('add an item', item);
+    await item.save(); // saving the item allowed 4 other tests to pass
     res.status(200).json(item);
-    console.log('add after response, Data', Data)
-  } catch(e) { 
-    next(e); 
-    // res.status(500).send(e.message);
-  }
+  } catch(e) { next(e.message); }
 }
 
 Data.getAllItems = async(req, res) => {
-  const items = await DataModel.find(); //tried findOne, removing and not removing {} inside find and returning items[0]
+  const items = await DataModel.find({}); // this line is correct from the docs, finds all documents
   res.status(200).json(items);
 }
 
 Data.getOneItem = async(req, res) => {
-  const id = req.params.id;
-  console.log('getoneitem', id);
-  //id is coming in from params but the 
-  const items = await DataModel.find({ _id:id }); //tried removing _id, using findOne and returning items[0]
-  console.log(items);
-  res.status(200).json(items);
+  const id = req.params.id; // added params
+  const items = await DataModel.find({ _id:id });
+  res.status(200).json(items[0]);
 }
 
 Data.deleteOneItem = async(req, res) => {
@@ -55,8 +41,6 @@ Data.deleteOneItem = async(req, res) => {
 Data.updateOneItem = async(req, res) => {
   const id = req.params.id; //changed to params
   const data = req.body;
-  console.log('update', id, data);
-  // data is a completely empty object, and it should be going here.
   const item = await DataModel.findByIdAndUpdate(id, data, {new:true, useFindAndModify:false});
   res.status(200).json(item);
 }
